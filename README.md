@@ -18,7 +18,7 @@ Given html files - index.html, 44students.html and 62students.html<br>is paginat
 
 2. **Search with click and enter key**
 
-   - During the live search, if you click a page to navigate and then you want go back to your search result,<br>you can click the search button or press enter to see the result.
+   - During the live search, if you click a page to navigate<br>and then you want go back to your search result,<br>you can click the search button or press enter to see the result.
 
 3. **Bring you back where you were**
 
