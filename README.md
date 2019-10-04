@@ -24,13 +24,7 @@ Given html files - index.html, 44students.html and 62students.html<br>is paginat
 
    - If there is no input found,<br>you will go back to the page where you were automatically.
 
-   -
-
-   ```
-   INPUT.value= ""
-   ```
-
-   is not included when the search button<br>or the enter key is clicked<br>due to the live search function
+   - `INPUT.value= ""` is not included when the search button<br>or the enter key is clicked<br>due to the live search function
 
 ### `CONTACT`
 
