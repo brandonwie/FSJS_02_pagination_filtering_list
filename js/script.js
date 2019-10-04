@@ -107,21 +107,19 @@ const typeSearch = () => {
           }
         }
       }
-    }
-    /** Handle no results returned **/
-    // Target not matching lists
-    const noMatch = document.querySelectorAll(".js-no-match");
-    // Target "No Match Found" message DIV
-    const noMatchMessage = document.querySelectorAll(".js-err-message");
-    // If all names have 'noMatch' class, place a user-err-message
-    if (noMatch.length === studentNames.length) {
-      noMatchingFound();
-    }
-    // Delete a user-err-message if more than one exist already
-    if (noMatchMessage.length >= 1) {
-      for (let i = 0; i < noMatchMessage.length; i++) {
-        // Delete the message DIV when there's any match found
-        studentListContainer.removeChild(noMatchMessage[i]);
+      //! NEED TEST - BUTTON -> CLEAR INPUT -> ERR DIV FOUND
+      /** Handle no results returned **/
+      // Target not matching lists
+      const noMatch = document.querySelectorAll(".js-no-match");
+      // Target "No Match Found" message DIV
+      const noMatchMessage = document.querySelectorAll(".js-err-message");
+      // If all names have 'noMatch' class, place a user-err-message
+      if (noMatch.length === studentNames.length) {
+        noMatchingFound();
+      }
+      // Delete a user-err-message if there's more than 2
+      if (noMatchMessage.length >= 1) {
+        studentListContainer.removeChild(noMatchMessage[0]);
       }
     }
   });
@@ -130,7 +128,7 @@ const typeSearch = () => {
 // #3 [SEARCH BOX] [EVENT LISTENER - CLICK]
 const clickSearch = () => {
   pageHeader.addEventListener("click", e => {
-    if (e.target.type === "submit") {
+    if (e.target.tagName.toLowerCase() === "a") {
       const input = document.querySelector(".search-input");
       const inputValue = input.value.toLowerCase();
       const studentNames = document.querySelectorAll("h3");
@@ -142,6 +140,19 @@ const clickSearch = () => {
         } else {
           matchingLi.style.display = "none";
         }
+      }
+      /** Handle no results returned **/
+      // Target not matching lists
+      const noMatch = document.querySelectorAll(".js-no-match");
+      // Target "No Match Found" message DIV
+      const noMatchMessage = document.querySelectorAll(".js-err-message");
+      // If all names have 'noMatch' class, place a user-err-message
+      if (noMatch.length === studentNames.length) {
+        noMatchingFound();
+      }
+      // Delete a user-err-message if there's more than 2
+      if (noMatchMessage.length >= 1) {
+        studentListContainer.removeChild(noMatchMessage[0]);
       }
     }
   });
@@ -157,7 +168,6 @@ const clickPages = () => {
   const pageDiv = document.querySelector(".pagination");
   const pageUl = pageDiv.firstElementChild;
   const pageLi = pageUl.children;
-
   // [EVENT LISTENER]
   pageDiv.addEventListener("click", e => {
     // Loop through LI and remove class attr.
@@ -173,6 +183,11 @@ const clickPages = () => {
       e.target.setAttribute("class", "active");
       // Load a page that matches the anchor text content
       showPage(studentList, e.target.textContent);
+    }
+    // [FIXED ERR]'Not Found' message still shows when the last page is clicked (when there's less than 10 items on the page)
+    const errFix = document.querySelector(".js-err-message");
+    if (errFix !== null) {
+      studentListContainer.removeChild(errFix);
     }
   });
 };
