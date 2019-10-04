@@ -2,7 +2,7 @@ This project is the 2nd project of Full Stack JavaScript Techdegree with [Treeho
 
 ## Main Features
 
-> Pagination
+> Pagination <br>
 > Filtering
 
 ### `live search`
