@@ -131,7 +131,7 @@ removePag = () => {
   Add functionality to the search comp
 ******************************************/
 
-// Segregate student list
+// Segregate student list for searchFunc()
 const isMatch = input => {
   for (let i = 0; i < studentList.length; i++) {
     const studentName = studentList[i].querySelector("h3").textContent;
@@ -148,7 +148,7 @@ const isMatch = input => {
   return matchList;
 };
 
-// Main search function
+// Main search function - Added to Search Component
 const searchFunc = () => {
   const selectBtn = document.querySelector("button");
   const selectInput = document.querySelector("input");
@@ -158,7 +158,6 @@ const searchFunc = () => {
       studentList[i].style.display = "none";
     }
     const matchRes = isMatch(selectInput);
-    console.log(matchRes);
     if (matchRes.length !== 0) {
       removePag();
       showPage(matchRes, 1);
