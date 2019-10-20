@@ -1,5 +1,3 @@
-// TODO #1 - when the input is empty, roll back to the page a user was in
-
 /******************************************
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
@@ -10,9 +8,9 @@ const pageBody = document.querySelector(".js-page");
 // Target Header
 const pageHeader = pageBody.firstElementChild;
 // Target all student list
-const studentListContainer = document.querySelector(".js-list");
+const listContainer = document.querySelector(".js-list");
 // Retrieve & store all children
-const studentList = studentListContainer.children;
+const studentList = listContainer.children;
 // Set initial items-per-page to 10
 let itemsPerPage = 10;
 
@@ -22,11 +20,11 @@ let itemsPerPage = 10;
 
 const showPage = (list, page) => {
   // In case of page 1, startIndex = 0, endIndex = 10
-  const startIndex = page * itemsPerPage - itemsPerPage;
-  const endIndex = page * itemsPerPage;
+  const indexStart = page * itemsPerPage - itemsPerPage;
+  const indexEnd = page * itemsPerPage;
   // Loop through all the list items, show selected number of items, depending on the 'itemsPerPage'
   for (let i = 0; i < list.length; i++) {
-    if (i >= startIndex && endIndex > i) {
+    if (i >= indexStart && indexEnd > i) {
       list[i].style.display = "";
     } else {
       list[i].style.display = "none";
@@ -35,165 +33,7 @@ const showPage = (list, page) => {
 };
 
 /******************************************
-  EXCEED EXPECTATION
-******************************************/
-
-// #1 [SEARCH BOX] [COMPONENT]
-const searchComp = () => {
-  const div = document.createElement("div");
-  div.setAttribute("class", "student-search");
-  const input = document.createElement("input");
-  input.setAttribute("placeholder", "Search for student...");
-  // Set a class for CLICK event listener
-  input.setAttribute("class", "search-input");
-  div.appendChild(input);
-  const button = document.createElement("button");
-  button.textContent = "Search";
-  div.appendChild(button);
-  pageHeader.appendChild(div);
-};
-
-// #2-a [USER-ERR-MESSAGE] [COMPONENT]
-const noMatchingFound = () => {
-  const div = document.createElement("div");
-  // Set a class to remove later
-  div.setAttribute("class", "js-err-message");
-  const p = document.createElement("p");
-  p.textContent = "Oops! There's no one.";
-  div.appendChild(p);
-  // Append the message DIV
-  studentListContainer.appendChild(div);
-};
-
-// #2-b [SEARCH BOX] [EVENT LISTENER - INPUT]
-const typeSearch = () => {
-  pageHeader.addEventListener("keyup", e => {
-    const inputValue = e.target.value.toLowerCase();
-    const studentNames = document.querySelectorAll("h3");
-    //* Come back to a current page whenever the input is empty
-    if (inputValue.length === 0) {
-      const currentPage = document.querySelector(".active").textContent;
-      showPage(studentList, currentPage);
-    }
-    //* If it's not empty, start all the search process
-    else {
-      // FOR LOOP for live search
-      for (let i = 0; i < studentNames.length; i++) {
-        const nameSpelling = studentNames[i].textContent;
-        const matchingLi = studentNames[i].parentNode.parentNode;
-        if (nameSpelling.indexOf(inputValue) !== -1) {
-          matchingLi.style.display = "";
-          // Set classes to remove 'js-no-match' to roll back when there's any match found
-          matchingLi.setAttribute("class", "student-item cf");
-        } else {
-          // Set a class 'js-no-match' for IF statement below
-          matchingLi.setAttribute("class", "student-item cf js-no-match");
-          matchingLi.style.display = "none";
-        }
-      }
-      // FOR LOOP for seach with Enter key
-      if (e.keyCode === 13) {
-        for (let i = 0; i < studentNames.length; i++) {
-          const nameSpelling = studentNames[i].textContent;
-          const matchingLi = studentNames[i].parentNode.parentNode;
-          if (nameSpelling.indexOf(inputValue) !== -1) {
-            matchingLi.style.display = "";
-            // Set classes to remove 'js-no-match' to roll back when there's any match found
-            matchingLi.setAttribute("class", "student-item cf");
-          } else {
-            // Set a class 'js-no-match' for IF statement below
-            matchingLi.setAttribute("class", "student-item cf js-no-match");
-            matchingLi.style.display = "none";
-          }
-        }
-      }
-      //! NEED TEST - BUTTON -> CLEAR INPUT -> ERR DIV FOUND
-      /** Handle no results returned **/
-      // Target not matching lists
-      const noMatch = document.querySelectorAll(".js-no-match");
-      // Target "No Match Found" message DIV
-      const noMatchMessage = document.querySelectorAll(".js-err-message");
-      // If all names have 'noMatch' class, place a user-err-message
-      if (noMatch.length === studentNames.length) {
-        noMatchingFound();
-      }
-      // Delete a user-err-message if there's more than 2
-      if (noMatchMessage.length >= 1) {
-        studentListContainer.removeChild(noMatchMessage[0]);
-      }
-    }
-  });
-};
-
-// #3 [SEARCH BOX] [EVENT LISTENER - CLICK]
-const clickSearch = () => {
-  pageHeader.addEventListener("click", e => {
-    if (e.target.tagName.toLowerCase() === "a") {
-      const input = document.querySelector(".search-input");
-      const inputValue = input.value.toLowerCase();
-      const studentNames = document.querySelectorAll("h3");
-      for (let i = 0; i < studentNames.length; i++) {
-        const nameLetters = studentNames[i].textContent.toLowerCase();
-        const matchingLi = studentNames[i].parentNode.parentNode;
-        if (nameLetters.indexOf(inputValue) !== -1) {
-          matchingLi.style.display = "";
-        } else {
-          matchingLi.style.display = "none";
-        }
-      }
-      /** Handle no results returned **/
-      // Target not matching lists
-      const noMatch = document.querySelectorAll(".js-no-match");
-      // Target "No Match Found" message DIV
-      const noMatchMessage = document.querySelectorAll(".js-err-message");
-      // If all names have 'noMatch' class, place a user-err-message
-      if (noMatch.length === studentNames.length) {
-        noMatchingFound();
-      }
-      // Delete a user-err-message if there's more than 2
-      if (noMatchMessage.length >= 1) {
-        studentListContainer.removeChild(noMatchMessage[0]);
-      }
-    }
-  });
-};
-
-/******************************************
-    ANCHOR SETTING for PAGINATION
-  ******************************************/
-
-// [FUNCTION - PAGE CHANGE]
-const clickPages = () => {
-  // Retrieve all LI in .pagination DIV
-  const pageDiv = document.querySelector(".pagination");
-  const pageUl = pageDiv.firstElementChild;
-  const pageLi = pageUl.children;
-  // [EVENT LISTENER]
-  pageDiv.addEventListener("click", e => {
-    // Loop through LI and remove class attr.
-    for (let i = 0; i < pageLi.length; i++) {
-      // Target A inside LI
-      const pageA = pageLi[i].firstElementChild;
-      // Remove classes
-      pageA.removeAttribute("class");
-    }
-    // If the event target is A, set a class 'active'
-    if (e.target.tagName.toLowerCase() === "a") {
-      // Set the class to 'active'
-      e.target.setAttribute("class", "active");
-      // Load a page that matches the anchor text content
-      showPage(studentList, e.target.textContent);
-    }
-    // [FIXED ERR]'Not Found' message still shows when the last page is clicked (when there's less than 10 items on the page)
-    const errFix = document.querySelector(".js-err-message");
-    if (errFix !== null) {
-      studentListContainer.removeChild(errFix);
-    }
-  });
-};
-
-/******************************************
-  APPEND PAGINATION COMPONENTS
+  ADD PAGINATION LINKS
 ******************************************/
 
 const appendPageLinks = list => {
@@ -222,19 +62,137 @@ const appendPageLinks = list => {
   }
   // Append the result to the student list
   pageBody.appendChild(div);
-  // Load a event handler function to change pages
-  clickPages();
-  clickSearch();
-  typeSearch();
+  // Add click event-listener for A
+  pageChange(list);
+};
+
+/******************************************
+    Click Event-listener to each A element
+  ******************************************/
+
+// [FUNCTION - PAGE CHANGE]
+const pageChange = list => {
+  // Retrieve all LI in .pagination DIV
+  const pageDiv = document.querySelector(".pagination");
+  const pageUl = pageDiv.firstElementChild;
+  const pageLi = pageUl.children;
+  // [EVENT LISTENER]
+  pageDiv.addEventListener("click", e => {
+    // remove 'active' class
+    for (let i = 0; i < pageLi.length; i++) {
+      const pageA = pageLi[i].firstElementChild;
+      pageA.removeAttribute("class");
+    }
+    // If the event target is A, set a class 'active'
+    if (e.target.tagName.toLowerCase() === "a") {
+      // Set the class to 'active'
+      e.target.setAttribute("class", "active");
+      // Load a page that matches the anchor text content
+      showPage(list, e.target.textContent);
+    }
+  });
+};
+
+/******************************************
+  CREATE SEARCH COMPONENT
+******************************************/
+
+const searchComp = () => {
+  const createDiv = document.createElement("div");
+  createDiv.setAttribute("class", "student-search");
+  const createInput = document.createElement("input");
+  createInput.setAttribute("placeholder", "Search for students...");
+  const createBtn = document.createElement("button");
+  createBtn.textContent = "Search";
+  createDiv.appendChild(createInput);
+  createDiv.appendChild(createBtn);
+  // Append to header
+  pageHeader.appendChild(createDiv);
+  // Add search function
+  searchFunc();
+};
+
+/******************************************
+  Remove Pagination
+******************************************/
+
+removePag = () => {
+  const pagination = document.querySelector(".pagination");
+  const noMatch = document.querySelector(".noMatch");
+  if (pagination) {
+    pageBody.removeChild(pagination);
+  }
+  if (noMatch) {
+    pageBody.removeChild(noMatch);
+  }
+};
+
+/******************************************
+  Add functionality to the search comp
+******************************************/
+
+// Segregate student list
+const isMatch = input => {
+  for (let i = 0; i < studentList.length; i++) {
+    const studentName = studentList[i].querySelector("h3").textContent;
+    studentList[i].setAttribute("isMatch", false);
+    if (
+      input.value.length !== 0 &&
+      studentName.toLowerCase().indexOf(input.value.toLowerCase()) !== -1
+    ) {
+      studentList[i].setAttribute("isMatch", true);
+    }
+  }
+  // save matching items in "matchList"
+  const matchList = listContainer.querySelectorAll("li[isMatch=true]");
+  return matchList;
+};
+
+// Main search function
+const searchFunc = () => {
+  const selectBtn = document.querySelector("button");
+  const selectInput = document.querySelector("input");
+  // Search Response behavior
+  const searchRes = () => {
+    for (let i = 0; i < studentList.length; i++) {
+      studentList[i].style.display = "none";
+    }
+    const matchRes = isMatch(selectInput);
+    console.log(matchRes);
+    if (matchRes.length !== 0) {
+      removePag();
+      showPage(matchRes, 1);
+      appendPageLinks(matchRes);
+    } else {
+      if (selectInput.value.length !== 0) {
+        removePag();
+        const noResult = document.createElement("h3");
+        noResult.setAttribute("class", "noMatch");
+        noResult.textContent = "No Match Found";
+        pageBody.appendChild(noResult);
+      } else {
+        removePag();
+        showPage(studentList, 1);
+        appendPageLinks(studentList);
+      }
+    }
+  };
+
+  selectBtn.addEventListener("click", () => {
+    searchRes();
+  });
+  selectInput.addEventListener("keyup", () => {
+    searchRes();
+  });
 };
 
 /******************************************
   PROCESS AFTER THE WINDOW IS LOADED
 ******************************************/
 
-// Append a search component
-searchComp();
 // Show page 1 initially
 showPage(studentList, 1);
 // Retrieve a page that is clicked
 appendPageLinks(studentList);
+// Add search component
+searchComp();

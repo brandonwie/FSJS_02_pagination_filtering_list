@@ -16,15 +16,13 @@ Given html files - index.html, 44students.html and 62students.html<br>is paginat
 
    - Each letter typed by a user will search student names out of a given list<br>_in real-time_ and return the result.
 
-2. **Search with click and enter key**
+2. **Search with click**
 
-   - During the live search, if you click a page to navigate<br>and then you want go back to your search result,<br>you can click the search button or press enter to see the result.
+   - You can also click the search button to see the result.
 
 3. **Bring you back where you were**
 
-   - If there is no input found,<br>you will go back to the page where you were automatically.
-
-   - `INPUT.value= ""` is not included when the search button<br>or the enter key is clicked<br>due to the live search function
+   - Just simply remove your input. You will go back to the beginning.
 
 ### `CONTACT`
 
